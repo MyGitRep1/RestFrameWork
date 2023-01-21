@@ -4,6 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import AuthorList from './components/Author.js'
 import BookList from "./components/Books";
+import {HashRouter, Route} from 'react-router-dom'
 
 class App extends React.Component {
     constructor(props) {
@@ -38,10 +39,12 @@ class App extends React.Component {
     }
 
     render () {
-       return (
-           <div>
-               <AuthorLIst authors={this.state.authors} />
-               <BookList items={this.state.books} />
+       return  (
+           <div> className='App'>
+                <HashRouter>
+                    <Route exact path='/' component={() => <AuthorList authors={this.state.authors} />} />
+                    <Route exact path='/books' component={() => <BookList items={this.state.books} />} />
+                </HashRouter>
            </div>
        )
     }
