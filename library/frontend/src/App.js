@@ -50,7 +50,7 @@ class App extends React.Component {
     render () {
        return  (
            <div> className='App'>
-                <HashRouter>
+                <BrowserRouter>
                     <nav>
                         <ul>
                            <li>
@@ -64,10 +64,11 @@ class App extends React.Component {
                     <Switch>
                         <Route exact path='/' component={() => <AuthorList authors={this.state.authors} />} />
                         <Route exact path='/books' component={() => <BookList items={this.state.books} />} />
+                        <Route exact path='/author/:id' component={() => <AuthorBookList items={this.state.books} />} />
                         <Redirect from='/authors' to='/'/>
                         <Route component={NotFound404}/>
                     </Switch>
-                </HashRouter>
+                </BrowserRouter>
            </div>
        )
     }
