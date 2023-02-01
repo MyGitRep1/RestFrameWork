@@ -8,17 +8,16 @@ from rest_framework.viewsets import ModelViewSet, ViewSet
 from .models import Author, Book, Article, Biography
 from .serializers import AuthorModelSerializer, BookModelSerializer, ArticleModelSerializer, BiographyModelSerializer
 
+class AuthorPaginator(LimitOffsetPagination):
+    default_limit = 10
+
 
 class AuthorModelViewSet(ModelViewSet):
     queryset = Author.objects.all()
+    permission_classes = [IsAuthenticated]
     serializer_class = AuthorModelSerializer
-
-    def get_queryset(self):
-        param = self.request.query_params.get('name')
-        print(self.request.query_params)
-        if param:
-            return Author.objects.filter(first_name__contains=param[0])
-        return super().get_queryset()
+    filterset_fields = ['first_name', 'last_name', 'birthday_year']
+    pagination_class = AuthorPaginator
 
 
 class BookModelViewSet(ModelViewSet):
