@@ -39,3 +39,60 @@ class TestAuthorViewSet(TestCase):
         view = AuthorModelViewSet.as_view({'post': 'create'})
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_detail(self):
+        author = Author.objects.create(first_name='Александр', last_name='Пушкин', birthday_year=1799)
+        client = APIClient()
+        response = client.get(f'/api/authors/{author.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_detail(self):
+        author = Author.objects.create(first_name='Александр', last_name='Пушкин', birthday_year=1799)
+        client = APIClient()
+        response = client.get(f'/api/authors/{author.id}/', {'first_name': 'Говард', 'last_name': 'Лавкрафт'})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_edit_admin(self):
+        author = Author.objects.create(first_name='Александр', last_name='Пушкин', birthday_year=1799)
+        client = APIClient()
+        admin = User.objects.create_superuser('admin', 'admin@admin.com', 'admin')
+        client.login(username='admin', password='admin')
+        response = client.put(f'/api/authors/{author.id}/',
+                              {'first_name': 'Говард', 'last_name': 'Лавкрафт', 'birthday_year': 1880})
+        author = Author.objects.get(pk=author.id)
+
+        self.asserEqual(response.status_code, status.HTTP_200_OK)
+        self.asserEqual(author.first_name, 'Говард')
+        self.asserEqual(author.last_name, 'Лавкрафт')
+        self.asserEqual(author.birthday_year, 1880)
+        client.logout()
+
+class TestMath(APISimpleTestCase):
+    def test_sqrt(self):
+        import math
+        self.asserEqual(math.sqrt(4), 2)
+
+
+class TestBookViewSet(APITestCase):
+
+    def test_get_lists(self):
+        response = self.client.get('/api/books/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_edit_book_admin(self):
+        # author = Author.objects.create(first_name='Александр', last_name='Пушкин', birthday_year=1799)
+        # book = Book.objects.create(name='Руслан и Людмила')
+        # book.author.add(author)
+        # book.save()
+
+        book = mixer.blend(Book)
+        print(book.author)
+        admin = User.objects.create_superuser('admin', 'admin@admin.com', 'admin')
+        self.client.login(username='admin', password='admin')
+        response = self.client.put(f'/api/authors/{book.id}/',
+                              {'name': 'Пиковая дама', 'author': 1})
+        print(response.json())
+        book = Book.objects.get(pk=book.id)
+        self.asserEqual(response.status_code, status.HTTP_200_OK)
+        self.asserEqual(book.name, 'Пиковая дама')
+        self.client.logout()
