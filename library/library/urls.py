@@ -19,7 +19,7 @@ urlpatterns = [
    # path('api/', include(router.urls)),
    # path('api/', include(router.urls)),
    # re_path(r'^myapi/(?P<version>\d)/authors/$', MyAPIView.as_view({'get': 'list'})),
-   path('api/1/authors', include('authors.urls', namespace='1')),
-   path('api/2/authors', include('authors.urls', namespace='2')),
+   # path('api/1/authors', include('authors.urls', namespace='1')),
+   path('api/1/authors', MyAPIView.as_view()),
 
 ]
