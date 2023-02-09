@@ -1,8 +1,15 @@
 from django.contrib import admin
+from django.contrub.auth.models import AbstractUser
 from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
+from rst_framework import permissions
 from app.views import AuthorModelViewSet, ArticleModelViewSet, BiographyModelViewSet, BookModelViewSet, MyAPIView)
 from rest_framework.authtoken.views import obtain_auth_token
+from graphene_django.views import GraphQLView
+
+
+data = [1, 2, 3]
+data()
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -30,7 +37,8 @@ router.register('books', BookModelViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/', include(router.urls)),
+    path('api-token-auth/', obtain_auth_token),
+    path('graphqil/' GraphQLView.as_view(graphqil=True)),
     path('api/', include(router.urls)),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json')
