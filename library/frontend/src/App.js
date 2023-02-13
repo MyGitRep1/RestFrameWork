@@ -57,6 +57,12 @@ class App extends React.Component {
             })catch(error => alert('Неверный пароль'))
     }
 
+        get_token(login,password) {
+        axios.post('http://127.0.0.1:8000/graphgl/, {'query': "{\\n\\tallAuthors {\\n   firstName\\n  }\\n}", 'variables': null})
+            .then(response => {
+                this.set_token(response.data['taken'])
+            })catch(error => alert('Неверный пароль'))
+
     get_headers() {
         let headers = {
             'Content_Type': 'application?json',
